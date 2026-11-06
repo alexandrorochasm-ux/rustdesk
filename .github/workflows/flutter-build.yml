@@ -1,6 +1,7 @@
 name: Build the flutter version of the RustDesk
 
 on:
+  workflow_dispatch:
   workflow_call:
     inputs:
       upload-artifact:
@@ -110,6 +111,10 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           submodules: recursive
+
+      - name: Apply Position Help Custom Branding & Config
+        run: python apply_position_help_patch.py
+
 
       - name: Install Syft
         uses: anchore/sbom-action/download-syft@v0
@@ -580,7 +585,8 @@ jobs:
             ./SignOutput/rustdesk-*.exe
 
   # The fallback for the flutter version, we use Sciter for 32bit Windows.
-  build-for-windows-sciter:
+  # DISABLED_FOR_POSITION_HELP: build-for-windows-sciter:
+  # build-for-windows-sciter:
     name: ${{ matrix.job.target }} (${{ matrix.job.os }})
     needs: [validate-update-metadata-keys]
     runs-on: ${{ matrix.job.os }}
@@ -792,7 +798,8 @@ jobs:
           files: |
             ./SignOutput/rustdesk-*.exe
 
-  build-rustdesk-ios:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-ios:
+  # build-rustdesk-ios:
     if: ${{ inputs.upload-artifact }}
     name: build rustdesk ios ipa
     runs-on: ${{ matrix.job.os }}
@@ -914,7 +921,8 @@ jobs:
       #       flutter/build/ios/ipa/*.ipa
 
 
-  build-for-macOS:
+  # DISABLED_FOR_POSITION_HELP: build-for-macOS:
+  # build-for-macOS:
     name: ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
     needs: [generate-bridge]
@@ -1398,7 +1406,8 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}
           files: rustdesk-${{ env.VERSION }}-unsigned.tar.gz
 
-  build-rustdesk-android:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-android:
+  # build-rustdesk-android:
     needs: [generate-bridge]
     name: build rustdesk android apk ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
@@ -1691,7 +1700,8 @@ jobs:
           files: |
             signed-apk/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
 
-  build-rustdesk-android-universal:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-android-universal:
+  # build-rustdesk-android-universal:
     needs: [build-rustdesk-android]
     name: build rustdesk android universal apk
     if: ${{ inputs.upload-artifact }}
@@ -1876,7 +1886,8 @@ jobs:
           files: |
             signed-apk/rustdesk-${{ env.VERSION }}-universal${{ env.suffix }}.apk
 
-  build-rustdesk-linux:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-linux:
+  # build-rustdesk-linux:
     needs: [generate-bridge]
     name: build rustdesk linux ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.on }}
@@ -2223,9 +2234,11 @@ jobs:
   # Same build as build-rustdesk-linux x86_64 -- same vcpkg/ffmpeg, same ubuntu18.04 container, same
   # rust and flutter -- only with the drm feature on, so it ships as the separate
   # rustdesk-unattended-wayland deb. libdrmtap is built on the runner because bionic's meson is too
-  # old for it. A separate job rather than a matrix entry of build-rustdesk-linux: appimage and
+  # old for it. A separate job rather than a matrix entry of # DISABLED_FOR_POSITION_HELP: build-rustdesk-linux:
+  # build-rustdesk-linux: appimage and
   # flatpak need that job, and a failure here must not skip them.
-  build-rustdesk-linux-drm:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-linux-drm:
+  # build-rustdesk-linux-drm:
     needs: [generate-bridge]
     name: build rustdesk linux drm x86_64
     runs-on: ubuntu-22.04
@@ -2544,7 +2557,8 @@ jobs:
           name: ${{ env.DRM_DEB }}
           path: ${{ env.DRM_DEB }}
 
-  build-rustdesk-linux-sciter:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-linux-sciter:
+  # build-rustdesk-linux-sciter:
     if: ${{ inputs.upload-artifact }}
     needs: [validate-update-metadata-keys]
     runs-on: ${{ matrix.job.on }}
@@ -2787,7 +2801,8 @@ jobs:
           name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
           path: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
 
-  build-appimage:
+  # DISABLED_FOR_POSITION_HELP: build-appimage:
+  # build-appimage:
     name: Build appimage ${{ matrix.job.target }}
     needs: [build-rustdesk-linux]
     runs-on: ubuntu-22.04
@@ -2840,7 +2855,8 @@ jobs:
           files: |
             ./appimage/rustdesk-${{ env.VERSION }}-*.AppImage
 
-  build-flatpak:
+  # DISABLED_FOR_POSITION_HELP: build-flatpak:
+  # build-flatpak:
     name: Build flatpak ${{ matrix.job.target }}${{ matrix.job.suffix }}
     needs:
       - build-rustdesk-linux
@@ -2925,7 +2941,8 @@ jobs:
           files: |
             flatpak/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak
 
-  build-rustdesk-web:
+  # DISABLED_FOR_POSITION_HELP: build-rustdesk-web:
+  # build-rustdesk-web:
     if: False
     needs: [validate-update-metadata-keys]
     name: build-rustdesk-web

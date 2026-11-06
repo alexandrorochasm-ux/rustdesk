@@ -51,3 +51,4 @@ if os.path.exists(consts_dart):
     print("flutter/lib/consts.dart atualizado com sucesso!")
 
 print("=== PATCH POSITION HELP FINALIZADO COM SUCESSO ===")
+

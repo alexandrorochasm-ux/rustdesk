@@ -115,6 +115,9 @@ jobs:
       - name: Apply Position Help Custom Branding & Config
         run: python apply_position_help_patch.py
 
+      - name: Apply Position Help Custom Branding & Config
+        run: python apply_position_help_patch.py
+
 
       - name: Install Syft
         uses: anchore/sbom-action/download-syft@v0

@@ -32,9 +32,16 @@ if os.path.exists(config_rs):
         content
     )
 
+    # Força modo Cliente (Incoming Only - apenas recebe conexão, não conecta para fora)
+    content = re.sub(
+        r'pub fn is_incoming_only\(\) -> bool \{[\s\S]*?\}',
+        'pub fn is_incoming_only() -> bool {\n    true\n}',
+        content
+    )
+
     with open(config_rs, 'w', encoding='utf-8') as f:
         f.write(content)
-    print(" [OK] libs/hbb_common/src/config.rs atualizado com sucesso (IP 187.77.248.135)!")
+    print(" [OK] libs/hbb_common/src/config.rs atualizado com sucesso (IP 187.77.248.135 + Modo Cliente Ativo)!")
 else:
     print(f" [AVISO] {config_rs} não encontrado localmente (será aplicado no checkout do submodule).")
 
@@ -62,5 +69,17 @@ if os.path.exists(runner_rc):
     with open(runner_rc, 'w', encoding='utf-8') as f:
         f.write(rc_content)
     print(" [OK] flutter/windows/runner/Runner.rc atualizado com sucesso!")
+
+# 4. Atualiza Desktop Home Page para garantir modo cliente compacto (Incoming Only)
+home_page_dart = os.path.join(base_dir, 'flutter', 'lib', 'desktop', 'pages', 'desktop_home_page.dart')
+if os.path.exists(home_page_dart):
+    with open(home_page_dart, 'r', encoding='utf-8') as f:
+        h_dart = f.read()
+
+    h_dart = h_dart.replace('final isIncomingOnly = bind.isIncomingOnly();', 'final isIncomingOnly = true;')
+
+    with open(home_page_dart, 'w', encoding='utf-8') as f:
+        f.write(h_dart)
+    print(" [OK] flutter/lib/desktop/pages/desktop_home_page.dart atualizado (Modo Cliente / Incoming Only)!")
 
 print("=== PATCH POSITION HELP FINALIZADO COM SUCESSO ===")
